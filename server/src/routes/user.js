@@ -6,13 +6,13 @@ import { UserModel } from "../models/User.js";
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { username, password, email, firstname, lastname } = req.body;
-  const user = await UserModel.findOne({ username });
+  const { password, email, firstname, lastname } = req.body;
+  const user = await UserModel.findOne({ email });
   if (user) {
-    return res.status(400).json({ data: "Username already exists" });
+    return res.status(400).json({ data: "User already exists" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new UserModel({ username, password: hashedPassword, email, firstname, lastname });
+  const newUser = new UserModel({ password: hashedPassword, email, firstname, lastname });
   await newUser.save();
   res.json({ data: "User registered successfully" });
 });

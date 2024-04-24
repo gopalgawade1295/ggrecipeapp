@@ -144,7 +144,7 @@ const Home = () => {
                                             </Typography>
 
                                             <Box sx={{ height: '180px', overflow: 'auto', m: 1, p: 1, pt: 0 }}>
-                                                <Typography variant='body2' sx={{ p: 1 }}>
+                                                <Typography variant='body2' sx={{ p: 1, color: 'text.secondary' }}>
                                                     {v.instructions}
                                                 </Typography>
                                             </Box>

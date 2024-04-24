@@ -3,11 +3,18 @@ import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/mater
 import { useLocation, useNavigate } from 'react-router-dom';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { ButtonProduct } from '../assets/styles/Styles';
 
 const Header = ({ mode, setMode }) => {
     const location = useLocation();
     const navigate = useNavigate();
-    const userInfo = null;
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    console.log(userInfo, "kk")
+
+    const Logout = () => {
+        sessionStorage.removeItem('userInfo');
+        window.location.reload();
+    }
 
     return (
         <AppBar
@@ -26,11 +33,11 @@ const Header = ({ mode, setMode }) => {
 
                     {location.pathname.includes('/login') ?
                         null :
-                        <Button onClick={() => userInfo === null ? navigate('/login') : console.log("")}>
+                        <ButtonProduct onClick={() => userInfo === null ? navigate('/login') : Logout()}>
                             <Typography variant='body2'>
                                 {userInfo === null ? 'Login' : 'Logout'}
                             </Typography>
-                        </Button>
+                        </ButtonProduct>
                     }
                 </Box>
             </Toolbar>

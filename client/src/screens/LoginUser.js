@@ -69,17 +69,15 @@ const LoginUser = () => {
                 setOpen(true);
 
                 const res = await axios.post(
-                    `http://127.0.0.1:8000/user/login/`,
+                    `https://ggrecipeapp.onrender.com/auth/login/`,
                     {
-                        name: values.email,
                         email: values.email,
-                        username: values.email,
                         password: values.password
                     }
                 );
 
                 const data = await res.data;
-                sessionStorage.setItem('userInfo', JSON.stringify(data.info));
+                sessionStorage.setItem('userInfo', JSON.stringify(data));
 
                 setTimeout(() => {
                     setOpen(false)
@@ -230,7 +228,7 @@ const LoginUser = () => {
                                 <Grid item lg={12} md={12} sm={12} xs={12}>
                                     <Box sx={{ width: '100%', mt: 1, textAlign: 'center' }}>
                                         <Typography variant='body2'>
-                                            Don't have an account yet? <span style={{ cursor: 'pointer', color: '#611ACE', fontWeight: 600 }} onClick={() => navigate('/user/register')}>Register now</span>
+                                            Don't have an account yet? <span style={{ cursor: 'pointer', color: '#611ACE', fontWeight: 600 }} onClick={() => navigate('/register')}>Register now</span>
                                         </Typography>
                                     </Box>
                                 </Grid>
