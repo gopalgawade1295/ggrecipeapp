@@ -1,4 +1,3 @@
-import { Box, InputAdornment, CircularProgress, Dialog, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, outlinedInputClasses, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useFormik } from "formik";
@@ -8,6 +7,9 @@ import { ButtonBack, ButtonProduct, TileBox } from '../assets/styles/Styles';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Box, InputAdornment, CircularProgress, Dialog, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, outlinedInputClasses, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
+import success from '../assets/images/success.png';
+import error from '../assets/images/error.png';
 
 const customTheme = (outerTheme) =>
     createTheme({
@@ -69,7 +71,7 @@ const LoginUser = () => {
                 setOpen(true);
 
                 const res = await axios.post(
-                    `https://ggrecipeapp.onrender.com/auth/login/`,
+                    `${process.env.REACT_APP_SECRET_KEY}/auth/login/`,
                     {
                         email: values.email,
                         password: values.password
@@ -258,14 +260,14 @@ const LoginUser = () => {
                             <CircularProgress color="success" /> :
                             message?.includes("Success") ?
                                 <img
-                                    src={""}
+                                    src={success}
                                     height={'40px'}
                                     weight={'40px'}
                                     alt=''
                                 /> :
                                 message?.includes("Error") ?
                                     <img
-                                        src={""}
+                                        src={error}
                                         height={'40px'}
                                         weight={'40px'}
                                         alt=''

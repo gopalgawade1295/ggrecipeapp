@@ -1,19 +1,26 @@
-import { Box, Chip, Grid, IconButton, Skeleton, Typography, InputAdornment, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { RecipeSaveButton, RecipeTileBox } from '../assets/styles/Styles'
-import axios from 'axios'
-import img1 from '../assets/images/paneer-tikka-skewers-500x500.jpg'
-import SearchIcon from '@mui/icons-material/Search'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import SearchIcon from '@mui/icons-material/Search';
+import Recipe from '../components/Recipe';
+import SkeletonCard from '../components/SkeletonCard';
+import { Box, Grid, IconButton, Typography, InputAdornment, TextField, useMediaQuery, useTheme, Dialog, DialogTitle, DialogContent, DialogContentText, CircularProgress } from '@mui/material';
 
 const Home = () => {
     const [loading, setLoading] = useState(false);
     const [recipes, setRecipes] = useState([]);
     const [keyword, setKeyword] = useState('');
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [description, setDescription] = useState("");
+    const [ids, setIds] = useState([]);
+    const outerTheme = useTheme();
+    const Smalldialog = useMediaQuery(outerTheme.breakpoints.down('sm'));
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
     const getRecipes = async () => {
         setLoading(true);
         try {
-            const res = await axios.get('https://ggrecipeapp.onrender.com/recipes');
+            const res = await axios.get(`${process.env.REACT_APP_SECRET_KEY}/recipes`);
             const data = await res.data;
             setRecipes(data);
             setLoading(false);
@@ -24,8 +31,60 @@ const Home = () => {
         }
     }
 
+    const savedRecipesID = async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_SECRET_KEY}/recipes/savedRecipes/ids/${userInfo.userID}`);
+            const data = await res.data;
+            setIds(data?.data)
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    const saveRecipe = async (key) => {
+        setMessage("Please wait!");
+        setDescription("Please do not close the window or go back");
+        setOpen(true);
+        try {
+            setTimeout(() => {
+                setOpen(false)
+                setMessage("");
+                setDescription("");
+            }, [2000])
+            const res = await axios.put(`${process.env.REACT_APP_SECRET_KEY}/recipes`, {
+                userID: userInfo.userID,
+                recipeID: key
+            });
+            const data = await res.data;
+            setMessage("Success!");
+            setDescription("Saved Successfully.");
+            setOpen(true);
+
+            setTimeout(() => {
+                setOpen(false);
+                setMessage("");
+                setDescription("");
+            }, [2000])
+
+            savedRecipesID();
+            getRecipes();
+        }
+        catch (err) {
+            setMessage("Error!");
+            setDescription('Something went wrong!');
+            setOpen(true);
+            setTimeout(() => {
+                setOpen(false)
+                setMessage("");
+                setDescription("");
+            }, [2000])
+        }
+    }
+
     useEffect(() => {
         getRecipes();
+        savedRecipesID();
     }, []);
 
     return (
@@ -62,42 +121,7 @@ const Home = () => {
                         {Array.from(Array(4).keys().map((v, i) => {
                             return (
                                 <Grid key={i} item lg={3} md={6} sm={12} xs={12}>
-                                    <RecipeTileBox>
-                                        <Box textAlign={'center'}>
-                                            <Typography component="div" variant='h5' sx={{ p: 1, width: '150px', ml: 'auto', mr: 'auto' }}>
-                                                <Skeleton animation="wave" />
-                                            </Typography>
-                                        </Box>
-
-                                        <Skeleton sx={{ height: 250 }} animation="wave" variant="rectangular" />
-
-                                        <Typography component="div" variant='h6' sx={{ p: 1, pb: 0, width: '150px', ml: 2 }}>
-                                            <Skeleton animation="wave" />
-                                        </Typography>
-
-                                        <Box sx={{ m: 1.75, minHeight: '110px', }}>
-                                            {Array.from(Array(3).keys().map((v, i) => {
-                                                return (
-                                                    <Skeleton key={i} variant="rounded" animation="wave" width={i === 0 ? 210 : i === 1 ? 250 : 110} height={30} sx={{ borderRadius: "20px", m: 0.75 }} />
-                                                )
-                                            }))}
-                                        </Box>
-
-                                        <Typography component="div" variant='h6' sx={{ p: 1, pb: 0, width: '150px', ml: 2 }}>
-                                            <Skeleton animation="wave" />
-                                        </Typography>
-
-                                        <Box sx={{ height: '180px', m: 1, p: 1, pt: 0 }}>
-                                            <Typography component="div" variant='body2' sx={{ p: 1 }}>
-                                                {Array.from(Array(5).keys().map((v, i) => {
-                                                    return (
-                                                        <Skeleton animation="wave" key={i} />
-                                                    )
-                                                }))}
-                                                <Skeleton animation="wave" width={120} />
-                                            </Typography>
-                                        </Box>
-                                    </RecipeTileBox>
+                                    <SkeletonCard />
                                 </Grid>
                             )
                         }))}
@@ -108,53 +132,67 @@ const Home = () => {
                             v.name.toLowerCase().includes(keyword.toLowerCase())).map((v) => {
                                 return (
                                     <Grid item lg={3} md={6} sm={12} xs={12} key={v._id}>
-                                        <RecipeTileBox>
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                                <Typography variant='h5' sx={{ p: 1 }}>
-                                                    {v.name}
-                                                </Typography>
-
-                                                <RecipeSaveButton>
-                                                    <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                                        Save
-                                                    </Typography>
-                                                </RecipeSaveButton>
-                                            </Box>
-
-                                            <img
-                                                src={img1}
-                                                style={{ height: '250px', width: '100%' }}
-                                                alt={v.name}
-                                            />
-
-                                            <Typography variant='h6' sx={{ p: 1, pb: 0, ml: 1 }}>
-                                                Ingredients
-                                            </Typography>
-
-                                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', m: 1.5, height: '110px', overflow: 'auto' }}>
-                                                {v.ingredients?.map((v, i) => {
-                                                    return (
-                                                        <Chip label={v} variant="outlined" key={i} sx={{ m: 0.25 }} />
-                                                    )
-                                                })}
-                                            </Box>
-
-                                            <Typography variant='h6' sx={{ p: 1, pb: 0, ml: 1 }}>
-                                                Instructions
-                                            </Typography>
-
-                                            <Box sx={{ height: '180px', overflow: 'auto', m: 1, p: 1, pt: 0 }}>
-                                                <Typography variant='body2' sx={{ p: 1, color: 'text.secondary' }}>
-                                                    {v.instructions}
-                                                </Typography>
-                                            </Box>
-                                        </RecipeTileBox>
+                                        <Recipe
+                                            v={v}
+                                            ids={ids}
+                                            userInfo={userInfo}
+                                            saveRecipe={saveRecipe}
+                                        />
                                     </Grid>
                                 )
                             })}
                     </>
                 }
             </Grid>
+
+            <Dialog
+                open={open}
+                aria-labelledby="responsive-dialog-title"
+                sx={{ textAlign: 'center' }}
+            >
+                <DialogTitle
+                    id="responsive-dialog-title"
+                    sx={{ mb: 0, pb: 0 }}
+                >
+                    <Typography variant='h5'>
+                        {message}
+                    </Typography>
+                </DialogTitle>
+
+                <DialogTitle id="responsive-dialog-title">
+                    {message?.includes("wait") ?
+                        <CircularProgress color="success" /> :
+                        message?.includes("Success") ?
+                            <img
+                                src={""}
+                                height={'40px'}
+                                weight={'40px'}
+                                alt=''
+                            /> :
+                            message?.includes("Error") ?
+                                <img
+                                    src={""}
+                                    height={'40px'}
+                                    weight={'40px'}
+                                    alt=''
+                                /> :
+                                null
+                    }
+                </DialogTitle>
+
+                <DialogContent
+                    sx={Smalldialog ?
+                        { minWidth: '100px' } :
+                        { minWidth: '320px' }
+                    }
+                >
+                    <DialogContentText>
+                        <Typography variant='body1'>
+                            {description}
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

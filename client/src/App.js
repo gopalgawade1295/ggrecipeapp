@@ -1,11 +1,12 @@
 import './App.css';
-import { Outlet, createBrowserRouter, useLocation } from 'react-router-dom';
+import { Outlet, createBrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import Home from './screens/Home';
 import SavedRecipes from './screens/SavedRecipes';
 import MyRecipes from './screens/MyRecipes';
 import RegisterUser from './screens/RegisterUser';
 import LoginUser from './screens/LoginUser';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import { useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Box, Toolbar, outlinedInputClasses, InputAdornment } from '@mui/material';
@@ -14,6 +15,8 @@ export const App = () => {
   const defaultmode = sessionStorage.getItem("mode") === "" || sessionStorage.getItem("mode") === null ? 'light' : sessionStorage.getItem("mode")
   const [mode, setMode] = useState(defaultmode);
   const location = useLocation();
+  const navigate = useNavigate();
+  const userInfo = sessionStorage.getItem('userInfo')
 
   const themes = createTheme({
     palette: {
@@ -67,6 +70,12 @@ export const App = () => {
     sessionStorage.setItem("mode", mode)
   }, [mode])
 
+  useEffect(() => {
+    if (userInfo === null && ['/myrecipes', '/savedrecipes'].includes(location.pathname)) {
+      navigate('/login')
+    }
+  }, [userInfo])
+
   return (
     <div className="App">
       <ThemeProvider theme={themes}>
@@ -86,6 +95,7 @@ export const App = () => {
 
           <Outlet />
         </Box>
+        <Footer />
       </ThemeProvider>
     </div>
   );

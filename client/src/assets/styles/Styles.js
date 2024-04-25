@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 export const RecipeTileBox = styled(Box)({
@@ -103,4 +103,56 @@ export const ButtonBack = styled(Button)({
         background: '#CFCFCF',
         color: '#611ACE'
     }
+})
+
+export const FlexEnd = styled(Box)({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+})
+
+export const FlexBetween = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start'
+})
+
+export const FlexCenter = styled(Box)({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+})
+
+export const FlexBetweenWrap = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    flexWrap: 'wrap'
+})
+
+export const FooterBox = styled(Box)({
+    background: '#7F38EC',
+    padding: '16px',
+    color: '#FFFFFF',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+})
+
+export const RecipeHeading = styled(Typography)({
+    padding: '8px',
+    paddingBottom: '0px',
+    marginLeft: '8px'
+})
+
+export const RecipeItems = styled(Box)({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    margin: '14px',
+    height: '110px',
+    overflow: 'auto'
 })

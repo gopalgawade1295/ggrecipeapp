@@ -13,7 +13,7 @@ app.use
 app.use("/auth", userRouter);
 app.use("/recipes", recipeRouter);
 
-const url = process.env.SECRET_KEY;
+const url = process.env.REACT_APP_SECRET_KEY;
 mongoose.connect(url,
     {
         useNewUrlParser: true,
