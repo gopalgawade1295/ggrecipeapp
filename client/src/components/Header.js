@@ -20,6 +20,7 @@ const Header = ({ mode, setMode }) => {
     const Logout = () => {
         sessionStorage.removeItem('userInfo');
         window.location.reload();
+        navigate('/')
     }
 
     return (
