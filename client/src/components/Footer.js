@@ -7,7 +7,7 @@ import { FlexEnd, FooterBox } from '../assets/styles/Styles';
 const Footer = () => {
     return (
         <FooterBox>
-            <Typography variant='h5' sx={{ p: 1 }}>
+            <Typography variant='h5' sx={{ p: 1, fontFamily: 'Dancing Script' }}>
                 GG-Recipe App
             </Typography>
 

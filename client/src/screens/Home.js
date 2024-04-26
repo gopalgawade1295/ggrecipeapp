@@ -4,6 +4,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import Recipe from '../components/Recipe';
 import SkeletonCard from '../components/SkeletonCard';
 import { Box, Grid, IconButton, Typography, InputAdornment, TextField, useMediaQuery, useTheme, Dialog, DialogTitle, DialogContent, DialogContentText, CircularProgress } from '@mui/material';
+import success from '../assets/images/success.png';
+import error from '../assets/images/error.png';
 
 const Home = () => {
     const [loading, setLoading] = useState(false);
@@ -164,14 +166,14 @@ const Home = () => {
                         <CircularProgress color="success" /> :
                         message?.includes("Success") ?
                             <img
-                                src={""}
+                                src={success}
                                 height={'40px'}
                                 weight={'40px'}
                                 alt=''
                             /> :
                             message?.includes("Error") ?
                                 <img
-                                    src={""}
+                                    src={error}
                                     height={'40px'}
                                     weight={'40px'}
                                     alt=''

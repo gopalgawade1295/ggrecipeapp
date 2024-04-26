@@ -77,16 +77,18 @@ const MyRecipes = () => {
     }, []);
 
     const ImageConvert = (e) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(e);
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            }
-            fileReader.onerror = (err) => {
-                reject(err);
-            }
-        })
+        if (e) {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(e);
+                fileReader.onload = () => {
+                    resolve(fileReader.result);
+                }
+                fileReader.onerror = (err) => {
+                    reject(err);
+                }
+            })
+        }
     }
 
     const handleUpload = async (e) => {
@@ -118,7 +120,7 @@ const MyRecipes = () => {
                     {
                         name: recipe.name,
                         description: recipe.name,
-                        ingredients: [recipe.ingredients],
+                        ingredients: recipe.ingredients.split(','),
                         instructions: recipe.instructions,
                         imageUrl: String(image),
                         cookingTime: recipe.cookingtime,
@@ -155,6 +157,7 @@ const MyRecipes = () => {
                     setDescription("");
                 }, [2000])
                 getRecipes();
+                setOpen(false);
             }
             catch (err) {
                 setMessage("Error!");
@@ -186,6 +189,7 @@ const MyRecipes = () => {
             setMessage("Please wait!");
             setDescription("Please do not close the window or go back");
             setOpenModal(true);
+            console.log(recipe.ingredients)
 
             try {
                 setLoading(true);
@@ -193,7 +197,7 @@ const MyRecipes = () => {
                     {
                         name: recipe.name,
                         description: recipe.name,
-                        ingredients: [...recipe.ingredients],
+                        ingredients: recipe.ingredients.split(','),
                         instructions: recipe.instructions,
                         imageUrl: String(image),
                         cookingTime: recipe.cookingtime,
@@ -230,8 +234,10 @@ const MyRecipes = () => {
                     setDescription("");
                 }, [2000])
                 getRecipes();
+                setOpen(false);
             }
             catch (err) {
+                console.log(err)
                 setMessage("Error!");
                 setDescription('Something went wrong!');
                 setOpenModal(true);
@@ -408,7 +414,7 @@ const MyRecipes = () => {
                                                         name: v.name,
                                                         description: v.description,
                                                         cookingtime: v.cookingTime,
-                                                        ingredients: v.ingredients,
+                                                        ingredients: v.ingredients.toString(),
                                                         instructions: v.instructions
                                                     });
                                                     setKey('update');

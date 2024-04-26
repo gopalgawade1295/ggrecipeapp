@@ -34,14 +34,17 @@ const Header = ({ mode, setMode }) => {
         >
             <Toolbar>
                 <FlexCenter onClick={() => navigate('/')}>
-                    <img
-                        src={img1}
-                        alt=''
-                        height={'50px'}
-                        width={'50px'}
-                    />
+                    {!matches ?
+                        <img
+                            src={img1}
+                            alt=''
+                            height={'50px'}
+                            width={'50px'}
+                        /> :
+                        null
+                    }
 
-                    <Typography variant='h5'>
+                    <Typography variant='h5' sx={{ fontFamily: 'Dancing Script', cursor:'pointer' }}>
                         &nbsp;GG-Recipe App
                     </Typography>
                 </FlexCenter>
