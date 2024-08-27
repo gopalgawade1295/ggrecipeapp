@@ -57,7 +57,7 @@ const Navbar = ({ mode, setMode }) => {
                         variant={matches ? "h6" : "h5"}
                         sx={{ ml: 1, fontWeight: 600 }}
                     >
-                        GG Recipe
+                        GG Recipes
                     </Typography>
                 </FlexCenterMin>
 
