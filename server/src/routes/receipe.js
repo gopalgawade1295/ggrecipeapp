@@ -9,8 +9,18 @@ const router = express.Router();
 //Get all recipes
 router.get("/", async (req, res) => {
   try {
-    const result = await RecipesModel.find({});
-    res.status(200).json(result);
+    if (req.query.category === "" || req.query.category === "All") {
+      const result = await RecipesModel.find({});
+      res.status(200).json(result);
+    }
+    else {
+      const result = await RecipesModel.find({
+        "$or": [
+          { category: { $regex: req.query.category } }
+        ]
+      });
+      res.status(200).json(result);
+    }
   } catch (err) {
     res.status(500).json(err);
   }
@@ -25,6 +35,7 @@ router.post("/", verifyToken, async (req, res) => {
     ingredients: req.body.ingredients,
     instructions: req.body.instructions,
     imageUrl: req.body.imageUrl,
+    category: req.body.category,
     cookingTime: req.body.cookingTime,
     userOwner: req.body.userOwner,
   });
@@ -47,6 +58,7 @@ router.put("/update/:recipeId", async (req, res) => {
       instructions: req.body.instructions,
       imageUrl: req.body.imageUrl,
       cookingTime: req.body.cookingTime,
+      category: req.body.category,
       userOwner: req.body.userOwner,
     });
     res.status(201).json({ data: 'Updated Successfully!' });
@@ -103,5 +115,17 @@ router.get("/savedRecipes/:userId", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+//Get recipe by ID
+router.get("/recipe/:id", async (req, res) => {
+  try {
+    const recipe = await RecipesModel.findById(req.params.id);
+    res.status(201).json({ data: recipe })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+})
 
 export { router as recipeRouter };
